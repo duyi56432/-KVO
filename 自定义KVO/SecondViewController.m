@@ -25,8 +25,8 @@
     _p = [Person new];
     _obser = [[KVOTest alloc] init];
     /// 添加观察者
-    [_p dy_addObserver:self forKeyPath:@"name" options:NSKeyValueObservingOptionNew context:nil];
-    [_p dy_addObserver:_obser forKeyPath:@"name" options:NSKeyValueObservingOptionNew context:nil];
+    [_p gv_addObserver:self forKeyPath:@"name" options:NSKeyValueObservingOptionNew context:nil];
+    [_p gv_addObserver:_obser forKeyPath:@"name" options:NSKeyValueObservingOptionNew context:nil];
     
 
 //    [self printClasses:[Person class]];

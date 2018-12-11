@@ -10,6 +10,11 @@
 
 @implementation Person
 
+//- (void)setName:(NSString *)name {
+//    _name = name;
+//    NSLog(@"setter");
+//}
+
 // NSObject dealloc
 //- (void) dealloc {
 //    NSLog(@"%s", __func__);

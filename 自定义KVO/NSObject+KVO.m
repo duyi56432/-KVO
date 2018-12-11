@@ -130,17 +130,20 @@ void myDealloc(id self, SEL _cmd) {
 
 
 static void tz_setter(id self, SEL _cmd, id newValue) {
-    NSLog(@"%s", __func__);
-    
+
     // 通知观察者， 值发生改变了
     // 观察者
+    struct objc_super superStruct = {
+        self,
+        class_getSuperclass(object_getClass(self))
+    };
+    
+    // 改变父类的值
+    objc_msgSendSuper(&superStruct, _cmd, newValue);
     
     NSString* setterName = NSStringFromSelector(_cmd);
     NSString* key = getterForSetter(setterName);
     
-    char *char_content = (char *)[[NSString stringWithFormat:@"_%@",key] cStringUsingEncoding:NSASCIIStringEncoding];
-    Ivar ivar = class_getInstanceVariable([self class], char_content);
-    object_setIvar(self, ivar, newValue);
     id observerArr = objc_getAssociatedObject(self, (__bridge void *)@"observerArr");
     for (id observer in observerArr) {
         [observer observeValueForKeyPath:key ofObject:self change:@{key:newValue} context:nil];
@@ -152,15 +155,15 @@ Class tz_class(id self, SEL _cmd) {
     return class_getSuperclass(object_getClass(self));
 }
 
-///// 移除观察者
-//- (void)gv_removeObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath {
-//
-//    // 父类
-//    Class superClass = [self class];//class_getSuperclass(object_getClass(self));
-//
-//    object_setClass(self, superClass);
-//
-//}
+/// 移除观察者
+- (void)gv_removeObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath {
+
+    // 父类
+    Class superClass = [self class];//class_getSuperclass(object_getClass(self));
+
+    object_setClass(self, superClass);
+
+}
 
 
 #pragma mark - 从get方法获取set方法的名称 key ===>>> setKey:
